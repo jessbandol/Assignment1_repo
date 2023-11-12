@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <link href="invoice.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+
+    <title>Purchase Receipt</title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Extended Price</th>
+            </tr>
+        </thead>
+        <tbody id="invoiceTable">
+            <!-- Product rows will be added dynamically using JavaScript -->
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3">Sub-total</td>
+                <td id="subtotal_cell">$0.00</td>
+            </tr>            
+            <tr>
+                <td colspan="3">Tax @ 5.75%</td>
+                <td id="tax_cell">$0.00</td>
+            </tr>
+            <tr>
+                <td colspan="3">Shipping</td>
+                <td id="shipping_cell"></td>
+            </tr>   
+            <tr class="total">
+                <td colspan="3"><b>Total</b></td>
+                <td id="total_cell"><b>$0.00</b></td>
+            </tr>        
+        </tfoot>
+    </table>
+    <script src="invoice.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+body {
+  background-image: url('./images/bg.png');
+  padding-bottom: 100px; /* Add padding at the bottom of the body */
+}
+
+/* font */
+h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+}
+
+h2 {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+}
+
+p {
+    font-family: 'Comfortaa', sans-serif;
+}
+.item, .purchase-btn{
+    font-family: 'Comfortaa', sans-serif;
+}
+
+/* Center align the header text */
+.header {
+    text-align: center;
+}
+
+.item img {
+    width: 210px;
+    height: 270px;
+}
+
+/* div products */
+.main {
+    position: relative; /* Makes sure the pseudo-element positions relative to this */
+  }
+  
+  .main::before {
+    content: ""; /* Necessary for the pseudo element to show */
+    opacity: 0.5; /* Adjust this value to your preference, 0.5 makes it 50% transparent */
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1; /* Puts the background behind the content of .main */
+  }
+
+  .main {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  
+  .item:nth-child(5) {
+    grid-column: 2 / span 1;
+    justify-self: center;
+  }
+  
+  .item {
+    display: flex;
+    flex-direction: column;  /* stack children vertically */
+    align-items: center;     /* center children horizontally */
+    justify-content: center; /* center children vertically */
+  }
+  
+  /* If your images aren't already centered by default, you can add this */
+  .item img {
+    align-self: center;
+    margin-bottom: 15px;
+  }
+  
+/* button */
+  .purchase-btn {
+    border: none; 
+    background-color: rgb(139, 98, 26);    
+    border-radius: 40px;
+    display: block;          /* Makes the button a block element so it occupies its own line */
+    margin: 20px auto;       /* Vertical margin of 20px and auto horizontal margin to center it */
+    font-size: 24px;         /* Larger font size */
+    padding: 10px 20px;      /* Padding around the button to make it bigger */
+    width: 200px;            /* You can set a specific width if needed */
+    text-align: center;      /* Ensures text inside the button is centered */
+    color: rgb(251, 253, 255);
+  }
+  
+  .purchase-btn:hover {
+    background-color: rgb(247, 218, 170);  /* Sets a darker blue as background on hover */
+    color: rgb(139, 98, 26);              /* Keeps text color white */
+  }
+  
+  .item h2 {
+    margin: 0; /* Removes any default margin */
+    margin-bottom: 5px; /* Add a bit of margin at the bottom, adjust to your liking */
+    margin-top: 45px;
+  }
+  
+  .item p {
+    margin: 0; /* Removes any default margin */
+  }
+
+  body {font-family: Arial, Helvetica, sans-serif;}
+
+nav li {
+    display: inline-block;
+    font-family: 'Comfortaa', sans-serif;
+}
+
+nav ul {
+  width: fit-content; /* Set a width based on content */
+  margin: 0 auto; /* Center the nav ul */
+  padding: 0;
+  text-align: center;
+  background-color: rgb(95, 88, 79);
+  border-radius: 100px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 14px 20px; /* Adjust the padding */
+    display: inline-block;
+}
+
+nav a:hover {
+    background-color: #8fb391;
+    color: white; /* Change text color on hover */
+    border-radius: 100px;
+}
+
+#container {
+  text-align:center;
+  width:960px;
+  margin: auto;
+}
+
+.column {
+  flex: 1;
+  padding: 20px;
+}
+
+.row:last-child {
+  margin-bottom: 0;
+}
+
+#about {
+  display: flex;
+}
+
+img {
+  width: 65%; /* Make the images fill the container width */
+  height: auto; /* Maintain the aspect ratio */
+}

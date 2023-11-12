@@ -1,0 +1,29 @@
+.subtotal-row td {
+    padding-top: 30px;
+}
+
+.total td {
+    border-top: 3px solid rgb(241, 232, 170);
+}
+
+table {
+    width: 60%;
+    font-family: 'Comfortaa', sans-serif;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    font-size: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: left;
+    border-bottom: 2px solid black;
+}
+
+td {
+    line-height: 1.4;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: left;
+}
