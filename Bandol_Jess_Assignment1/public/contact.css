@@ -1,8 +1,11 @@
 body {
-    background-image: url('./images/bg.png');
+    background-image: url('./images/bgsun.png');
+    background-size: cover;
+    background-repeat: no-repeat;
     padding-bottom: 100px; /* Add padding at the bottom of the body */
-   *{box-sizing: border-box;}
-  }
+    *{box-sizing: border-box;}
+}
+
 
 input[type=text], select, textarea {
   width: 100%;

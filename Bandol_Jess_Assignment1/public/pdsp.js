@@ -63,7 +63,7 @@ for (let i = 0; i < products.length; i++) {
     document.querySelector('.main').innerHTML += `
     <section class="item">
         <h2>${products[i].brand}</h2>
-        <p>$${products[i].price}</p>
+        <p>$${products[i].price.toFixed(2)}</p>
         <img src="${products[i].image}"/>
         <label id="quantity${i}_label" for="quantity${i}"> Quantity Desired </label>
         <input type="text" name="quantity${i}" id="quantity${i}" oninput="validateQuantity(${i})">

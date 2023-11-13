@@ -1,3 +1,15 @@
+body {
+    background-image: url('./images/bgsunpd.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding-top: 50px;
+  }
+
+/* Center the table on the page */
+table {
+    margin: auto;
+}
+
 .subtotal-row td {
     padding-top: 30px;
 }
@@ -26,4 +38,37 @@ td {
     padding-left: 10px;
     padding-right: 10px;
     text-align: left;
+}
+
+h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    text-align: center;
+    font-size: 60px;
+}
+
+/* button */
+.purchase-btn {
+    border: none; 
+    background-color: rgb(139, 98, 26);    
+    border-radius: 40px;
+    display: block;          /* Makes the button a block element so it occupies its own line */
+    margin: 20px auto;       /* Vertical margin of 20px and auto horizontal margin to center it */
+    font-size: 20px;         /* Larger font size */
+    padding: 10px 20px;      /* Padding around the button to make it bigger */
+    width: 200px;            /* You can set a specific width if needed */
+    text-align: center;      /* Ensures text inside the button is centered */
+    color: rgb(251, 253, 255);
+    margin-top: 70px;
+    font-family: 'Comfortaa', sans-serif;
+  }
+  
+  .purchase-btn:hover {
+    background-color: rgb(247, 218, 170);  /* Sets a darker blue as background on hover */
+    color: rgb(139, 98, 26);              /* Keeps text color white */
+    font-family: 'Comfortaa', sans-serif;
+  }
+
+a {
+    text-decoration: none;
 }
