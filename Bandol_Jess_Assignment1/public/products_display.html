@@ -26,14 +26,14 @@
     </div>
 
     <div id="container">
-        <form action="./invoice.html" method="get" id="purchaseForm">
+        <form action="/process_purchase" method="POST" name="qty_form" class="qty_form">
             <div>
                 <main class="main">
                     <!-- Dynamic product sections will be added here using JavaScript -->
                 </main>
             </div>
             <footer>
-                <input type="submit" value="Purchase" class="purchase-btn">
+                <input type="submit" value="Purchase" class="purchase-btn">	  
             </footer>
         </form>
         <script type="text/javascript" src="./pdsp.js"></script>        
