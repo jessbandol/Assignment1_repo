@@ -13,11 +13,11 @@ for (let i = 0; i < itemData.length; i++) {
 
 // Inventory object with initial quantities
 const inventory = {
-    "puffy pinks": 10,
-    "sun gold": 20,
-    "candyfloss": 15,
-    "bubbles": 30,
-    "lucky stars": 25,
+    "puffy pinks": 50,
+    "sun gold": 50,
+    "candyfloss": 50,
+    "bubbles": 50,
+    "lucky stars": 50,
 };
 
 //extended price

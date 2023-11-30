@@ -97,7 +97,8 @@ else if (Object.keys(errObject).length > 0) {
     //redirect to products page with input error messages in URL
     response.redirect("./invoice.html?valid&" + qs.stringify(POST) + `&inputErr`);
 }
-    });
+
+});
 
 //function to validate quantity entered against variable quantity 
 function validateQuantity(quantity, availableQuantity) {
