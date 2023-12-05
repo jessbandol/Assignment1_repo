@@ -207,6 +207,15 @@ app.post("/purchase_logout", function (request, response) {
     response.redirect("./invoice.html?valid&" + qs.stringify(request.body));
 });
 
+// Function to handle login errors and send a JSON response
+function handleLoginError(response, errorMessage, formData) {
+    // Update login error message
+    formData.loginError = errorMessage;
+
+    // Send a JSON response with an error property
+    response.status(400).json({ success: false, error: errorMessage });
+}
+
 
 // Route for processing login
 app.post('/process_login', function (request, response) {
@@ -244,6 +253,7 @@ app.post('/process_login', function (request, response) {
                 // Construct redirect URL with selected quantities
                 const redirectURL = selectedQuantities.map((quantity, index) => `&qty${index}=${quantity}`).join('');
                 response.redirect(`/invoice.html?valid&${redirectURL}`);
+                console.log('Successful login. Redirecting...');
                 return;
             } else {
                 // Log an error if selectedQuantities is not an array
@@ -258,6 +268,15 @@ app.post('/process_login', function (request, response) {
     } else {
         // Email does not match an existing user
         return handleLoginError(response, 'Invalid email address.', formData);
+    }
+
+     // Function to handle login errors and redirect back to login.html
+     function handleLoginError(response, errorMessage, formData) {
+        // Update login error message
+        formData.loginError = errorMessage;
+
+        // Send a JSON response with an error property
+        response.status(400).json({ success: false, error: errorMessage });
     }
 });
 

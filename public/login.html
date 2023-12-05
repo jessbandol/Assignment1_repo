@@ -46,6 +46,7 @@
 
         // Function to handle login form submission
         function performLogin() {
+            console.log('Performing login...');
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
@@ -67,9 +68,8 @@
             .then(response => {
                 if (response.ok) {
                     // If the response is okay, handle the JSON response
-                    //return response.json();
-                    console.log('Successful login. Redirecting...');
-                    window.location.href = '/invoice.html';
+                    return response.json();
+                    //window.location.href = '/invoice.html';
                 } else {
                     // If there's an error response, handle it and throw a custom error
                     throw new Error('Invalid email or password.');
