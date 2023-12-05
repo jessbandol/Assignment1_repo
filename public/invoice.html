@@ -14,6 +14,9 @@
 </head>
 <body>
     <h1>Your Cart 🛒</h1>
+
+    <div id="personalizationMessage"></div>
+
     <table>
         <thead>
             <tr>
@@ -46,9 +49,17 @@
         </tfoot>
     </table>
     <footer>
-        <a href="products_display.html">
-        <input type="submit" value="Purchase Again" class="purchase-btn">
-        </a>
+
+     <!-- Continue Shopping button -->
+    <form action="/continue_shopping" method="post">
+        <input type="submit" value="Continue Shopping" class="purchase-btn">
+    </form>
+
+    <!-- Finish Shopping button -->
+    <form action="/purchase_logout" method="post">
+        <input type="submit" value="Finish Shopping" class="purchase-btn">
+    </form>
+  
     </footer>
     <script src="invoice.js" type="module"></script>
 </body>

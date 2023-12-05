@@ -9,65 +9,53 @@ function submitForm() {
 const product1 = {
     brand: "puffy pinks",
     price: 5.20,
-    image: "./images/Puffy Pinks.jpeg"
-    //quantityIndex: 0
+    image: "./images/Puffy Pinks.jpeg",
+    quantity_available: 100
 };
 
 const product2 = {
     brand: "sun gold",
     price: 5.20,
-    image: "./images/Sun Gold.png"
-    //quantityIndex: 1
+    image: "./images/Sun Gold.png",
+    quantity_available: 100
 };
 
 const product3 = {
     brand: "candyfloss",
     price: 6.10,
-    image: "./images/Candyfloss.png"
-    //quantityIndex: 2
+    image: "./images/Candyfloss.png",
+    quantity_available: 100
 };
 
 const product4 = {
     brand: "bubbles",
     price: 4.15,
-    image: "./images/Bubbles.png"
-    //quantityIndex: 3
+    image: "./images/Bubbles.png",
+    quantity_available: 100
 };
 
 const product5 = {
     brand: "lucky stars",
     price: 6.10,
-    image: "./images/Lucky Stars.png"
-    //quantityIndex: 4
+    image: "./images/Lucky Stars.png",
+    quantity_available: 100
 };
 
 //POKE9 array
 const products = [product1, product2, product3, product4, product5];
-
-/* original for loop
-for (let i=0; i < products.length; i++) {
-    const product = products[i];
-    document.querySelector('.main').innerHTML += `
-    <section class="item">
-        <h2>${product.brand}</h2>
-        <p>$${product.price}</p>
-        <img src="${product.image}"/>
-        <label id="quantity${i}_label" for="quantity${i}"> Quantity Desired </label>
-        <input type="text" name="quantity${i}" id="quantity${i}">
-    </section>`;
-}
-*/
 
 // for loop (generates product sections with quantity input and error messages for each product in the array)
 for (let i = 0; i < products.length; i++) {
     document.querySelector('.main').innerHTML += `
     <section class="item">
         <h2>${products[i].brand}</h2>
+        <p>In Stock: <span style="text-decoration: underline; color: orange; display: inline-block; margin-bottom: 15px">${products[i].quantity_available}</span></p>
         <p>$${products[i].price.toFixed(2)}</p>
         <img src="${products[i].image}"/>
         <label id="quantity${i}_label" for="quantity${i}"> Quantity Desired </label>
         <input type="text" name="quantity${i}" id="quantity${i}" oninput="validateQuantity(${i})">
         <p class="error-message" id="quantity${i}_error"></p>
+
     </section>`;
 }
 
@@ -93,3 +81,46 @@ function validateQuantity(index) {
         errorMessage.classList.add('valid-message');
     }
 }
+
+//going to login after purchase
+document.addEventListener('DOMContentLoaded', function() {
+    const qtyForm = document.forms['qty_form'];
+
+    // Retrieve purchase information from local storage
+    const purchaseFormData = JSON.parse(localStorage.getItem('purchaseFormData'));
+
+    // Add an event listener for form submission
+    qtyForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    // Serialize form data and store it in local storage
+    const formData = new FormData(qtyForm);
+    const serializedData = {};
+
+    // Filter out undefined and empty values
+    for (const [key, value] of formData.entries()) {
+        if (value !== undefined && value.trim() !== '') {
+            serializedData[key] = value.trim();
+        }
+    }
+
+     // Store the serialized data in local storage
+     localStorage.setItem('selectedQuantities', JSON.stringify(serializedData));
+
+     // Redirect to the login page
+     window.location.href = 'login.html';
+ });
+
+    // Check if there is purchase information and populate the form
+    if (purchaseFormData) {
+        for (const [key, value] of Object.entries(purchaseFormData)) {
+            const inputField = document.getElementById(key);
+            if (inputField) {
+                inputField.value = value;
+            }
+        }
+    }
+
+    // Add this line after redirecting to the login page
+    localStorage.removeItem('purchaseFormData');
+});

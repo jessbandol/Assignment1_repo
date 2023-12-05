@@ -1,7 +1,7 @@
 import { itemData } from "./products.js";
 
-// extract quantity values from the URL and assign to the quantity array based on the item indexes in the quantityIndex of the itemData array
-const params = new URL(document.location).searchParams;
+// Extract quantity values from the URL and assign to the quantity array based on the item indexes in the quantityIndex of the itemData array
+const params = new URLSearchParams(window.location.search);
 let quantity = [];
 
 for (let i = 0; i < itemData.length; i++) {
@@ -21,7 +21,7 @@ const inventory = {
 };
 
 //extended price
-let subtotal=0;
+let subtotal = 0;
 let taxRate = 0.0575;
 let taxAmount = 0;
 let total = 0;
@@ -49,6 +49,58 @@ document.getElementById('subtotal_cell').innerHTML = '$' + subtotal.toFixed(2);
 document.getElementById('tax_cell').innerHTML = '$' + taxAmount.toFixed(2);
 document.getElementById('shipping_cell').innerHTML = '$' + shippingCharge.toFixed(2);
 
+// Retrieve selected quantities from local storage
+const selectedQuantities = JSON.parse(localStorage.getItem('selectedQuantities'));
+
+// Check if there are selected quantities
+if (selectedQuantities) {
+    // Display selected quantities on the invoice page
+    for (const [key, value] of Object.entries(selectedQuantities)) {
+        const quantityInput = document.getElementById(key);
+        if (quantityInput) {
+            quantityInput.value = value;
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Retrieve query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const isValid = urlParams.has('valid');
+    
+    if (isValid) {
+        // Extract and display selected quantities
+        const selectedQuantities = urlParams.getAll('qty');
+        // Use the selected quantities to update your HTML elements
+        updateInvoice(selectedQuantities);
+    }
+});
+
+function updateInvoice(selectedQuantities) {
+    console.log('Updating invoice with quantities:', selectedQuantities);
+
+    // Display selected quantities on the invoice page
+    for (let i = 0; i < selectedQuantities.length; i++) {
+        const quantityInput = document.getElementById(`quantity${i}`);
+        if (quantityInput) {
+            quantityInput.value = selectedQuantities[i];
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Retrieve additional data from the server if necessary
+    // Example: Fetching user information associated with the purchase
+    fetch('/api/user-data')
+      .then(response => response.json())
+      .then(userData => {
+        console.log('User Data:', userData);
+        // Use the data to update the HTML or perform other actions
+      })
+      .catch(error => {
+        console.error('Error fetching user data:', error.message);
+      });
+  });
 
 //validate quantity inputted into the textbox 
 function validateQuantity(brand, quantity) {
@@ -72,6 +124,58 @@ function validateQuantity(brand, quantity) {
         return "";
     }
 }
+
+
+window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const isValid = urlParams.has('valid');
+
+    if (isValid) {
+        // Fetch user data
+        fetch('/api/user-data')
+            .then(response => response.json())
+            .then(userData => {
+                // Show the invoice
+                generateInvoice();
+
+                // Populate personalization message with the username
+                const username = userData.username; // Adjust this based on your actual user data structure
+                const personalizationMessage = `Welcome back, ${username}!`;
+                document.getElementById('personalizationMessage').innerText = personalizationMessage;
+            })
+            .catch(error => {
+                console.error('Error fetching user data:', error.message);
+            });
+    }
+};
+
+// Add event listeners for the buttons
+document.addEventListener('DOMContentLoaded', function () {
+    const continueShoppingBtn = document.getElementById('continueShoppingBtn');
+    const finishShoppingBtn = document.getElementById('finishShoppingBtn');
+
+    if (continueShoppingBtn) {
+        continueShoppingBtn.addEventListener('click', function () {
+            // Handle the 'Continue Shopping' button click
+            fetch('/continue_shopping', { method: 'POST' })
+                .then(response => response.text())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        });
+    }
+
+    if (finishShoppingBtn) {
+        finishShoppingBtn.addEventListener('click', function () {
+            // Handle the 'Finish Shopping' button click
+            fetch('/purchase_logout', { method: 'POST' })
+                .then(response => response.text())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        });
+    }
+});
+
+
 
 // Item rows (generate the entire invoice table)
 function generateItemRows() {

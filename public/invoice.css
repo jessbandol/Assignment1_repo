@@ -52,22 +52,28 @@ h1 {
     border: none; 
     background-color: rgb(139, 98, 26);    
     border-radius: 40px;
-    display: block;          /* Makes the button a block element so it occupies its own line */
-    margin: 20px auto;       /* Vertical margin of 20px and auto horizontal margin to center it */
-    font-size: 20px;         /* Larger font size */
-    padding: 10px 20px;      /* Padding around the button to make it bigger */
-    width: 200px;            /* You can set a specific width if needed */
-    text-align: center;      /* Ensures text inside the button is centered */
+    margin: 50px 10px; /* Vertical margin of 20px and horizontal margin of 10px */
+    font-size: 20px;   /* Larger font size */
+    padding: 10px 20px; /* Padding around the button to make it bigger */
+    text-align: center; /* Ensures text inside the button is centered */
     color: rgb(251, 253, 255);
-    margin-top: 70px;
     font-family: 'Comfortaa', sans-serif;
-  }
-  
-  .purchase-btn:hover {
-    background-color: rgb(247, 218, 170);  /* Sets a darker blue as background on hover */
-    color: rgb(139, 98, 26);              /* Keeps text color white */
+}
+
+.purchase-btn:hover {
+    background-color: rgb(247, 218, 170); /* Sets a darker blue as background on hover */
+    color: rgb(139, 98, 26);             /* Keeps text color white */
     font-family: 'Comfortaa', sans-serif;
-  }
+}
+
+form {
+    display: inline-block;
+    margin: 0 auto;           /* Remove default form margin */
+}
+
+footer {
+    text-align: center;
+}
 
 a {
     text-decoration: none;

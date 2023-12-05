@@ -1,0 +1,235 @@
+body {
+    background-image: url('./images/bgsunpd.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding-bottom: 100px; /* Add padding at the bottom of the body */
+    *{box-sizing: border-box;}
+  }
+  
+  /* font */
+  h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+  }
+  
+  h2 {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 500;
+  }
+  
+  p {
+      font-family: 'Comfortaa', sans-serif;
+  }
+  .item, .purchase-btn{
+      font-family: 'Comfortaa', sans-serif;
+  }
+  
+  /* Center align the header text */
+  .header {
+      text-align: center;
+  }
+  
+  .item img {
+      width: 210px;
+      height: 270px;
+      border-radius: 70px;
+      box-shadow: 5px 5px 40px rgba(253, 246, 186, 0.692); /* Adjust values as needed */
+  }
+  
+  /* div products */
+  .main {
+      position: relative; /* Makes sure the pseudo-element positions relative to this */
+    }
+    
+    .main::before {
+      content: ""; /* Necessary for the pseudo element to show */
+      opacity: 0.5; /* Adjust this value to your preference, 0.5 makes it 50% transparent */
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      position: absolute;
+      z-index: -1; /* Puts the background behind the content of .main */
+    }
+  
+    .main {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+  
+    .purchase-btn {
+      grid-column: 3;
+      grid-row: 2;
+    }  
+    
+    .item:nth-child(5) {
+      grid-column: 2 / span 1;
+      justify-self: center;
+    }
+    
+    .item {
+      display: flex;
+      flex-direction: column;  /* stack children vertically */
+      align-items: center;     /* center children horizontally */
+      justify-content: center; /* center children vertically */
+    }
+    
+    /* If your images aren't already centered by default, you can add this */
+    .item img {
+      align-self: center;
+      margin-bottom: 15px;
+    }
+    
+  /* button */
+    .purchase-btn {
+      border: none; 
+      background-color: rgb(139, 98, 26);    
+      border-radius: 40px;
+      display: block;          /* Makes the button a block element so it occupies its own line */
+      margin: 20px auto;       /* Vertical margin of 20px and auto horizontal margin to center it */
+      font-size: 24px;         /* Larger font size */
+      padding: 10px 20px;      /* Padding around the button to make it bigger */
+      width: 200px;            /* You can set a specific width if needed */
+      text-align: center;      /* Ensures text inside the button is centered */
+      color: rgb(251, 253, 255);
+      margin-top: 70px;
+    }
+    
+    .purchase-btn:hover {
+      background-color: rgb(247, 218, 170);  /* Sets a darker blue as background on hover */
+      color: rgb(139, 98, 26);              /* Keeps text color white */
+    }
+    
+    .item h2 {
+      margin: 0; /* Removes any default margin */
+      margin-bottom: 5px; /* Add a bit of margin at the bottom, adjust to your liking */
+      margin-top: 45px;
+    }
+    
+    .item p {
+      margin: 0; /* Removes any default margin */
+    }
+  
+  nav li {
+      display: inline-block;
+      font-family: 'Comfortaa', sans-serif;
+  }
+  
+  nav ul {
+    width: fit-content; /* Set a width based on content */
+    margin: 0 auto; /* Center the nav ul */
+    padding: 0;
+    text-align: center;
+    background-color: rgb(95, 88, 79);
+    border-radius: 100px;
+  }
+  
+  nav a {
+      color: white;
+      text-decoration: none;
+      padding: 14px 20px; /* Adjust the padding */
+      display: inline-block;
+  }
+  
+  nav a:hover {
+      background-color: #8fb391;
+      color: white; /* Change text color on hover */
+      border-radius: 100px;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 5px; /* Adjust the margin as needed */
+    margin-bottom: 15px; /* Adjust the margin as needed */
+    border-radius: 50px;
+    font-family: 'Comfortaa', sans-serif;
+    font-size: 18px;
+  }
+
+.invalid-credentials,
+.invalid-inputs {
+    color: red; /* Set the color for invalid credentials and inputs */
+    white-space: nowrap; /* Prevent line breaks */
+    /* Add any other styles you want for invalid credentials and inputs */
+}
+  
+  .valid-message {
+    color: green;
+    text-align: center;
+    margin-top: 5px; /* Adjust the margin as needed */
+    background-color: #c9eeca;
+    border-radius: 50px;
+    width: 150px;
+  }
+  
+  #container {
+    text-align:center;
+    width:800px;
+    margin: auto;
+  }
+  
+  .header.section {
+    background: radial-gradient(circle, rgba(254, 198, 102, 0.234), rgba(243, 233, 221, 0));
+    padding: 30px; /* Adding some padding for better visual appearance */
+    border-radius: 40px;
+  }
+  
+  /*REGISTER PAGE*/
+  * {box-sizing: border-box}
+  
+  /* Add padding to containers */
+  .container {
+    padding: 16px;
+    width:800px;
+    margin: auto;
+  }
+  
+  /* Full-width input fields */
+  input[type=text], input[type=password] {
+    width: 100%;
+    padding: 20px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #ffffff;
+    font-family: 'Comfortaa', sans-serif;
+    border-radius: 15px;
+    font-size: 15px;
+  }
+  
+  input[type=text]:focus, input[type=password]:focus {
+    background-color: #ddd;
+    outline: none;
+  }
+  
+  /* Set a style for the submit/register button */
+  .registerbtn {
+    background-color: rgb(139, 98, 26);  
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 40px;
+      cursor: pointer;
+      font-family: 'Comfortaa', sans-serif;
+      font-size: larger;
+  }
+  
+  .registerbtn:hover {
+    background-color: #45a049;
+  }
+  
+  .loginbtn {
+    background-color: rgb(139, 98, 26);  
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 40px;
+      cursor: pointer;
+      font-family: 'Comfortaa', sans-serif;
+      font-size: larger;
+  }
+  
+  .loginbtn:hover {
+    background-color: #45a049;
+  }

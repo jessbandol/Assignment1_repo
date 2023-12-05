@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <link rel="stylesheet" href="log.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header section">
+        <h1>⋆˚✿˖° cloudscape charms ⋆˚✿˖°</h1>
+        <p>fill your life with an abundance of charm!</p>
+    </div>
+
+    <form id="login-form">
+        <div class="container">
+            <h1>Login</h1>
+            <p>Access your account here to checkout items.</p>
+
+            <!-- Sticky email address -->
+            <input type="text" placeholder="Email" name="email" id="email">
+           <!-- <input type="text" placeholder="Username" name="username" id="username"> -->
+
+            <input type="password" placeholder="Password" name="psw" id="password">
+
+            <!-- Placeholder for error message -->
+            <div class="error-message" id="error-message">
+            </div>
+
+            <button type="button" class="loginbtn" onclick="performLogin()">Login</button>
+        </div>
+
+        <div class="container signin">
+            <p>Create a new account <a href="register.html">here</a>.</p>
+        </div>
+    </form>
+
+    <script>
+        // Variable to store the error message
+        let errorMessage = '';
+
+        // Function to handle login form submission
+        function performLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Validate input (you can add more validation if needed)
+            if (!email || !password) {
+                errorMessage = 'Please enter both email and password.';
+                showErrorMessage('invalid-inputs');
+                return;
+            }
+
+            // Fetch user data from server
+            fetch('/process_login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, psw: password }),
+            })
+            .then(response => {
+                if (response.ok) {
+                    // If the response is okay, handle the JSON response
+                    return response.json();
+                } else {
+                    // If there's an error response, handle it and throw a custom error
+                    throw new Error('Invalid email or password.');
+                }
+            })
+            .then(result => {
+                if (result && result.success) {
+                    // Redirect to invoice.html upon successful login
+                    window.location.href = '/invoice.html' + window.location.search;
+                } else {
+                    // Display login error
+                    errorMessage = result.error || 'Invalid email or password.';
+                    showErrorMessage('invalid-credentials');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error processing login:', error.message);
+                        errorMessage = 'Invalid email or password.';
+                        showErrorMessage();
+            });
+        }
+
+        function showErrorMessage() {
+            const errorMessageContainer = document.getElementById('error-message');
+            errorMessageContainer.innerText = errorMessage;
+}
+    </script>
+
+</body>
+</html>
