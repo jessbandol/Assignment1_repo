@@ -243,11 +243,13 @@ app.post('/process_login', function (request, response) {
                 // Redirect to invoice.html with "valid" and selected quantities
                 // Construct redirect URL with selected quantities
                 const redirectURL = selectedQuantities.map((quantity, index) => `&qty${index}=${quantity}`).join('');
-                return response.redirect(`/invoice.html?valid&${redirectURL}`);
+                response.redirect(`/invoice.html?valid&${redirectURL}`);
+                return;
             } else {
                 // Log an error if selectedQuantities is not an array
                 console.error('selectedQuantities is not an array:', selectedQuantities);
-                return response.status(500).send('Internal Server Error');
+                response.status(500).send('Internal Server Error');
+                return;
             }
         } else {
             // Password does not match

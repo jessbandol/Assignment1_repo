@@ -67,7 +67,9 @@
             .then(response => {
                 if (response.ok) {
                     // If the response is okay, handle the JSON response
-                    return response.json();
+                    //return response.json();
+                    console.log('Successful login. Redirecting...');
+                    window.location.href = '/invoice.html';
                 } else {
                     // If there's an error response, handle it and throw a custom error
                     throw new Error('Invalid email or password.');
@@ -76,7 +78,7 @@
             .then(result => {
                 if (result && result.success) {
                     // Redirect to invoice.html upon successful login
-                    window.location.href = '/invoice.html' + window.location.search;
+                    window.location.href = '/invoice.html';
                 } else {
                     // Display login error
                     errorMessage = result.error || 'Invalid email or password.';
