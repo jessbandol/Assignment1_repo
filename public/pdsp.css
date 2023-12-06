@@ -23,6 +23,14 @@ p {
 .item, .purchase-btn{
     font-family: 'Comfortaa', sans-serif;
 }
+#WelcomeDiv {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  text-align: center;
+  margin-top: 20px; /* Adjust as needed for spacing */
+  color: #8fb391;
+}
 
 /* Center align the header text */
 .header {

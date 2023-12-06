@@ -25,8 +25,12 @@
         </nav>
     </div>
 
+    <div id="WelcomeDiv"></div>
+    
     <div id="container">
-        <form action="/process_purchase" method="POST" name="qty_form" class="qty_form">
+        <form action="process_form" method="POST" name="qty_form">
+        <input type="hidden" name="username" id="usernameEntered">
+        <input type="hidden" name="email" id="email">
             <div>
                 <main class="main">
                     <!-- Dynamic product sections will be added here using JavaScript -->
@@ -35,9 +39,8 @@
             <footer>
                 <input type="submit" value="Purchase" class="purchase-btn">	  
             </footer>
-        </form>
         <script type="text/javascript" src="./pdsp.js"></script>        
-    </form>   
+        </form>   
     </div> 
 </body>
 </html>

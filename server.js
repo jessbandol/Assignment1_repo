@@ -10,6 +10,7 @@ const userDataPath = path.join(__dirname, 'user_data.json');
 
 // Read and parse user data
 let user_reg_data;
+let loginUsers = [];
 
 if (fs.existsSync(filename)) {
     let data = fs.readFileSync(filename, 'utf-8');
@@ -27,17 +28,20 @@ app.all('*', function (request, response, next) {
     console.log(request.method + ' to ' + request.path);
     next();
 });
-app.use(express.json());
+//app.use(express.json());
 
 // Serve static files from the public directory
 app.use(express.static(__dirname + '/public'));
 
 // Load product data
-const products = require(__dirname + "/products.json");
+let products = require(__dirname + '/products.json');
+products.forEach( (prod,i) => {prod.total_sold = 0});
 
+/*
 // Declare selectedQuantities outside of any route handler
 let selectedQuantities = [];
 let POST = {};
+*/
 
 // Route for handling a GET request to "./products.js"
 app.get('/products.js', function (request, response, next) {
@@ -46,10 +50,29 @@ app.get('/products.js', function (request, response, next) {
     response.send(products_str);
 });
 
+/*
 // Route to get dummy user data
 app.get('/api/user-data', function (request, response) {
     const userData = { username: 'testuser', email: 'testuser@example.com' };
     response.json(userData);
+});
+*/
+
+//opening invoice not through the purhcase page
+app.get('/invoice.html', function (request, response) {
+    let username_input = request.query['username'];
+
+    //if the username is in the signed in, they would be in the array, send them 
+    if(loginUsers.includes(username_input)){
+        response.sendFile(__dirname + '/public/invoice.html'); 
+    
+    }
+    else{
+        //if not, bring them to the store with an error so they can make a purchase
+        response.redirect(
+            `/products_display.html?&error=true`
+          );
+    }
 });
 
 // Initialize product quantities
@@ -60,9 +83,11 @@ for (let i in products) {
 // Middleware to parse URL-encoded form data
 app.use(express.urlencoded({ extended: true }));
 
+/*
 // Load user data
 let userData = loadUserData();
 console.log('User data:', userData);
+*/
 
 /*
 //registering new user
@@ -140,6 +165,7 @@ app.post("/login", function (request, response) {
 });
 */
 
+/*
 app.post("/process_purchase", function (request, response) {
     // Initialize variables
     console.log('Processing purchase...');
@@ -189,7 +215,7 @@ app.post("/process_purchase", function (request, response) {
         return response.redirect(`/invoice.html?valid${redirectURL}`);
     }
 });
-
+*/
 
 // Route for updating qty_sold and available quantities
 app.post("/purchase_logout", function (request, response) {
@@ -207,6 +233,7 @@ app.post("/purchase_logout", function (request, response) {
     response.redirect("./invoice.html?valid&" + qs.stringify(request.body));
 });
 
+/*
 // Function to handle login errors and send a JSON response
 function handleLoginError(response, errorMessage, formData) {
     // Update login error message
@@ -215,9 +242,71 @@ function handleLoginError(response, errorMessage, formData) {
     // Send a JSON response with an error property
     response.status(400).json({ success: false, error: errorMessage });
 }
-
+*/
 
 // Route for processing login
+app.post('/login', function (request, response) {
+    //fills params
+    let email_input = request.body['email'];
+    let password_input = request.body['password'];
+    let orderParams = request.body['order'];
+    let response_msg = '';
+    let errors = false;
+
+    //generate the url for the order
+    let url = generateProductURL(orderParams);
+
+    //if there is an account, check if passwords
+    if (user_reg_data[email_input.toLowerCase()]) {
+        let storedUserData = user_reg_data[email_input.toLowerCase()];
+
+        // Verify the provided password against the stored hash and salt
+        const passwordMatch = verifyPassword(
+            password_input,
+            storedUserData.salt,
+            storedUserData.password
+        );
+
+        if (passwordMatch) {
+            // Add the username to loginUsers
+            if (!loginUsers.includes(email_input)) {
+                loginUsers.push(email_input);
+            }
+
+            // Construct JSON response with redirect URL
+            const jsonResponse = {
+                success: true,
+                redirectURL: `/invoice.html?${url}&email=${email_input}&totalOnline=${loginUsers.length}&email=${storedUserData.email}`,
+            };
+
+            // Send the JSON response
+            response.json(jsonResponse);
+            return; // Ensure that the function exits after redirecting
+        } else {
+            // Construct JSON response with error message
+            const jsonResponse = {
+                success: false,
+                error: 'Incorrect Password',
+            };
+
+            // Send the JSON response
+            response.json(jsonResponse);
+        }
+    } else {
+        response_msg = `${email_input} does not exist`;
+
+        // Construct JSON response with error message
+        const jsonResponse = {
+            success: false,
+            error: response_msg,
+        };
+
+        // Send the JSON response
+        response.json(jsonResponse);
+    }
+});
+
+/*
 app.post('/process_login', function (request, response) {
     // Read in the form post (request.body)
     const formData = request.body;
@@ -288,6 +377,90 @@ function handleLoginError(response, errorMessage, formData) {
     // Redirect back to login.html with params for login error and sticky email address
     return response.redirect(`/login.html?${qs.stringify(formData)}`);
 }
+*/
+
+//redirects user to register with the order in the url
+app.post("/toRegister", function (request, response) {
+    let orderParams = request.body['order'];
+    //console.log(orderParams);
+    let url = generateProductURL(orderParams);
+
+    response.redirect(`/register.html?`+url);
+});
+
+//redirects user to login with the order in the url
+app.post("/toLogin", function (request, response) {
+  let orderParams = request.body['order'];
+  //console.log(orderParams);
+  let url = generateProductURL(orderParams);
+
+  response.redirect(`/login.html?`+url);
+});
+
+//this is the register when a user wants to register
+app.post('/register', function (request, response) {
+    let errorString = '';
+  
+    //generate url string from order
+    let orderParams = request.body['order'];
+    console.log(orderParams);
+    if (orderParams) {
+        let jsonData;
+        try {
+            jsonData = JSON.parse(orderParams);
+        } catch (e) {
+            console.error(e);
+        }
+        let url = generateProductURL(jsonData); // Use jsonData instead of orderParams if necessary
+    } else {
+        console.error('orderParams is undefined');
+    }
+
+    let url = generateProductURL(orderParams);
+    
+    // Validate email address
+    const existingEmail = Object.keys(user_reg_data).find(
+        (email) => email.toLowerCase() === request.body.email.toLowerCase()
+      );
+    //if the email exists
+    if (existingEmail) {
+      errorString += 'Email Address Already Exists! ';
+    }
+    // if the email does not follow formatting requirements 
+    if (!/^[A-Za-z0-9_.]+@[A-Za-z0-9.]{2,}\.[A-Za-z]{2,3}$/.test(request.body.email)) {
+      errorString += 'Invalid Email Address Format! ';
+    }
+  
+    // Validate password
+    if (request.body.password !== request.body.repeat_password) {
+      errorString += 'Passwords Do Not Match! ';
+    }
+  
+    //if there are no errors, start the user creation proccess
+    if (errorString === '') {
+      const new_user = request.body.email.toLowerCase();
+  
+      // Consulted Chet and some external sites on salt and hashing
+      const { salt, hash } = hashPassword(request.body.password);
+    
+      user_reg_data[new_user] = {
+        password: hash, // Store the hashed password
+        salt: salt,     // Store the salt
+        username: request.body.username,
+        email: request.body.email.toLowerCase(), 
+
+      };
+      loginUsers.push(new_user);
+      // Write user data to file
+      fs.writeFileSync(filename, JSON.stringify(user_reg_data), 'utf-8');
+      //bring them to the invoice
+      response.redirect(`/invoice.html?`+ url + `&username=${new_user}`+`&totalOnline=${loginUsers.length}`+`&email=${request.body.email}`);
+    } else {
+      //send them to register with the url and the information to make it sticky along with the error
+      response.redirect(`/register.html?`+ url +`&username=${request.body.username}&email=${request.body.email}&error=${errorString}`);
+    }
+  });
+  
 
 // Handle the 'Continue Shopping' post request
 app.post('/continue_shopping', (req, res) => {
@@ -295,26 +468,127 @@ app.post('/continue_shopping', (req, res) => {
     res.redirect('/products_display.html');
 });
 
-// Handle the 'Finish Shopping' post request
-app.post('/purchase_logout', (req, res) => {
-    // Extract items or quantities selected from the request body
-    const selectedItems = req.body.selectedItems; // Replace with the actual field name used in your form
-    const selectedQuantities = req.body.selectedQuantities; // Replace with the actual field name used in your form
+//returns user to purchase with email and username in params for personalization and the order for stickyness
+app.post("/return_to_store", function (request, response) {
+    let username = request.body[`username`];
+    let orderParams = request.body['order'];
 
-    // Count items as sold and update quantities in your data or database
-    for (let i = 0; i < selectedItems.length; i++) {
-        const selectedItem = selectedItems[i];
-        const selectedQuantity = selectedQuantities[i];
+    let url = generateProductURL(orderParams);
 
-        updateSoldItems(selectedItem, selectedQuantity);
-    }
+    response.redirect(`/products_display.html?`+ url + `&username=${username}` + `&totalOnline=${loginUsers.length}`+`&email=${request.body.email}`);
 
-    // Redirect to the index page with a thank you message
-    res.redirect('/index.html?thank_you=true');
 });
 
+//update the total sold and quantity avalible 
+app.post("/complete_purchase", function (request, response) {
+    let orderParams = request.body['order'];
+    let orderArray = JSON.parse(orderParams);
+    let username = request.body['username'];
+    for (i in orderArray)
+        {
+            //update total and qty only if everything is good
+            products[i]['total_sold'] += orderArray[i];
+            products[i]['qty_available'] -= orderArray[i];
+        }
+        //log out user
+        loginUsers.pop(username);
+        //console.log(loginUsers);
+    response.redirect('/index.html?&thankYou=true');
+});
 
-// Route to get user data for testing
+//whenever a post with proccess form is recieved
+app.post("/process_form", function (request, response) {
+
+    let username = request.body[`username`];
+    //console.log(loginUsers);
+    //get the textbox inputs in an array
+    let qtys = [];
+    for (let i = 0; i < products.length; i++) {
+        let quantityValue = request.body[`quantity${i}`];
+        qtys.push(Number(quantityValue));
+    }
+    //console.log(request.body)
+    //initially set the valid check to true
+    let valid = true;
+    //instantiate an empty string to hold the url
+    let url = '';
+    let soldArray =[];
+
+    //for each member of qtys
+    for (i in qtys) {
+        
+        //set q as the number
+        let q = Number(qtys[i]);
+        
+        //console.log(validateQuantity(q));
+        //if the validate quantity string is empty
+        if (validateQuantity(q)=='') {
+            //check if we will go into the negative if we buy this, set valid to false if so
+            if(products[i]['qty_available'] - Number(q) < 0){
+                valid = false;
+                url += `&prod${i}=${q}`
+            }
+            // otherwise, add to total sold, and subtract from available
+            else{
+               
+                soldArray[i] = Number(q);
+                
+                //add argument to url
+                url += `&prod${i}=${q}`
+            }
+            
+            
+        }
+        //if the validate quantity string has stuff in it, set valid to false
+         else {
+            
+            valid = false;
+            url += `&prod${i}=${q}`
+        }
+        //check if no products were bought, set valid to false if so
+        if(url == `&prod0=0&prod1=0&prod2=0&prod3=0&prod4=0&prod5=0`){
+            valid = false
+        }
+    }
+
+    //if its false, return to the store with error=true
+    if(valid == false)
+    {
+        response.redirect(`products_display.html?error=true` + url + `&username=${username}`+ `&totalOnline=${loginUsers.length}`+`&email=${request.body.email}`);
+    }
+    //otherwise, redirect to the invoice with the url attached
+    else{
+
+        const lowercaseArray = loginUsers.map(item => item.toLowerCase());
+        const lowercaseSearchString = username.toLowerCase();
+
+        if (lowercaseArray.includes(lowercaseSearchString)) {
+        
+            response.redirect('invoice.html?' + url + `&username=${username}`+`&totalOnline=${loginUsers.length}`+`&email=${request.body.email}`);
+        
+        }
+        else{
+
+            response.redirect('login.html?' + url + '&error=&username=');
+        }
+    }
+ });
+
+//generate the salt and hash for the password provided
+function hashPassword(password) {
+    const salt = crypto.randomBytes(16).toString('hex'); // Generate a random salt
+    const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+    return { salt, hash };
+  }
+  
+  // Function to verify a password against a hash and salt
+  function verifyPassword(password, salt, storedHash) {
+    const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+    return hash === storedHash;
+  }
+
+ /*
+//Route to get user data for testing
 app.get('/get-user-data', function (request, response) {
     // Read user data from the JSON file
     const userData = loadUserData();
@@ -347,6 +621,7 @@ function saveUserData() {
 function userExists(username) {
     return userData.some(u => u.username === username);
 }
+*/
 
 // Function to validate quantity
 function validateQuantity(quantity, availableQuantity) {
@@ -371,6 +646,40 @@ function validateQuantity(quantity, availableQuantity) {
     }
 
     return errors; // Add this line to return the array of errors
+}
+
+/*
+function generateProductURL(orderString){
+    let orderArray = JSON.parse(orderString);
+    let orderURL = ``;
+    for(i in orderArray){
+        orderURL += `&prod${i}=${orderArray[i]}`
+
+    }
+    return orderURL;
+}
+*/
+
+function generateProductURL(orderParams) {
+    // Check if orderParams is undefined or null
+    if (orderParams === undefined || orderParams === null) {
+        return '';
+    }
+
+    let orderArray;
+    try {
+        orderArray = JSON.parse(orderParams);
+    } catch (e) {
+        console.error(e);
+        return '';
+    }
+
+    let orderURL = '';
+    for (let i in orderArray) {
+        orderURL += `&prod${i}=${orderArray[i]}`;
+    }
+    
+    return orderURL;
 }
 
 // Server listening on port 8080

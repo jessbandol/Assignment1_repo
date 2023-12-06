@@ -17,22 +17,18 @@
         <p>fill your life with an abundance of charm!</p>
     </div>
 
-    <form id="login-form">
+    <form id="login-form" action="/login" method="post">
         <div class="container">
             <h1>Login</h1>
             <p>Access your account here to checkout items.</p>
 
-            <!-- Sticky email address -->
             <input type="text" placeholder="Email" name="email" id="email">
-           <!-- <input type="text" placeholder="Username" name="username" id="username"> -->
-
-            <input type="password" placeholder="Password" name="psw" id="password">
+            <input type="password" placeholder="Password" name="password" id="password">
 
             <!-- Placeholder for error message -->
-            <div class="error-message" id="error-message">
-            </div>
+            <div id="error-message" class="error-message"></div>
 
-            <button type="button" class="loginbtn" onclick="performLogin()">Login</button>
+            <button type="submit" class="loginbtn">Login</button>
         </div>
 
         <div class="container signin">
@@ -41,11 +37,11 @@
     </form>
 
     <script>
-        // Variable to store the error message
-        let errorMessage = '';
+    // Variable to store the error message
+    let errorMessage = '';
 
-        // Function to handle login form submission
-        function performLogin() {
+    // Function to handle login form submission
+    function performLogin() {
             console.log('Performing login...');
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -53,50 +49,57 @@
             // Validate input (you can add more validation if needed)
             if (!email || !password) {
                 errorMessage = 'Please enter both email and password.';
-                showErrorMessage('invalid-inputs');
+                showErrorMessage();
                 return;
             }
 
             // Fetch user data from server
-            fetch('/process_login', {
+            fetch('/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, psw: password }),
+                body: JSON.stringify({ email, password, order: getOrderParams() }),
             })
-            .then(response => {
-                if (response.ok) {
-                    // If the response is okay, handle the JSON response
-                    return response.json();
-                    //window.location.href = '/invoice.html';
-                } else {
-                    // If there's an error response, handle it and throw a custom error
-                    throw new Error('Invalid email or password.');
-                }
-            })
+            .then(response => response.json())
             .then(result => {
                 if (result && result.success) {
                     // Redirect to invoice.html upon successful login
-                    window.location.href = '/invoice.html';
+                    window.location.href = result.redirectURL;
                 } else {
                     // Display login error
                     errorMessage = result.error || 'Invalid email or password.';
-                    showErrorMessage('invalid-credentials');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error processing login:', error.message);
-                        errorMessage = 'Invalid email or password.';
-                        showErrorMessage();
+                    showErrorMessage();
+                }
+            })
+            .catch(error => {
+                console.error('Error processing login:', error.message);
+                errorMessage = 'Invalid email or password.';
+                showErrorMessage();
             });
+        }
+
+        function getOrderParams() {
+            let params = (new URL(document.location)).searchParams;
+            let order = [];
+
+            // For each prod, push the value to the array
+            params.forEach((value, key) => {
+                if (key.startsWith('prod')) {
+                    order.push(parseInt(value));
+                }
+            });
+
+            return JSON.stringify(order);
         }
 
         function showErrorMessage() {
             const errorMessageContainer = document.getElementById('error-message');
-            errorMessageContainer.innerText = errorMessage;
-}
+            // Set the text content of the error message container
+            errorMessageContainer.textContent = errorMessage;
+            // Set text color to red
+            errorMessageContainer.style.color = 'red';
+        }
     </script>
-
 </body>
 </html>

@@ -3,35 +3,35 @@
     "brand": "Puffy Pinks",
     "price": 5.20,
     "image": "Puffy Pinks.jpeg",
-    "quantityIndex": 0,
+    "qty_availabe": 0,
     "qty_sold": 0
   },
   {
     "brand": "Sun Gold",
     "price": 5.20,
     "image": "Sun Gold.png",
-    "quantityIndex": 1,
+    "qty_availabe": 0,
     "qty_sold": 0
   },
   {
     "brand": "Candyfloss",
     "price": 6.10,
     "image": "Candyfloss.png",
-    "quantityIndex": 2,
+    "qty_availabe": 0,
     "qty_sold": 0
   },
   {
     "brand": "Bubbles",
     "price": 4.15,
     "image": "Bubbles.png",
-    "quantityIndex": 3,
+    "qty_availabe": 0,
     "qty_sold": 0
   },
   {
     "brand": "Lucky Stars",
     "price": 6.10,
     "image": "Lucky Stars.png",
-    "quantityIndex": 4,
+    "qty_availabe": 0,
     "qty_sold": 0
   } 
 ]

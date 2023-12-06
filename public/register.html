@@ -46,6 +46,41 @@
         </div>
     </form>
     <script>
+        let params = (new URL(document.location)).searchParams;
+        let order = [];
+
+        // For each prod, push the value to the array
+        params.forEach((value, key) => {
+            if (key.startsWith('prod')) {
+                order.push(parseInt(value));
+            }
+        });
+        //console.log(JSON.stringify(order));
+
+        //gets the error from the url and checks to see if its empty or null, if not, fill in the message
+        let error = params.get('error');
+        if(error !== null && error !== ''){
+            document.getElementById('errorMessages').innerHTML += `<div id="errorMessages" class="alert alert-danger">${error}</div>`;
+        }
+
+        //gets the params from url
+        let email = params.get('email');
+        let username = params.get('username');
+
+        //makes values sticky
+        if(email !== null){
+            document.getElementById('email').value = email;
+        }
+
+        if(username !== null){
+            document.getElementById('username').value = username;
+        }
+
+        // Set the value of the hidden input field to the JSON representation of the order array
+        document.getElementById('orderParams').value = JSON.stringify(order);
+        document.getElementById('orderReg').value = JSON.stringify(order);
+
+    /*
         document.addEventListener('DOMContentLoaded', function () {
           // Retrieve selected quantities from local storage
           const selectedQuantities = JSON.parse(localStorage.getItem('selectedQuantities'));
@@ -84,6 +119,8 @@
         // Display the error message within the specified container
         document.getElementById(errorContainerId).innerHTML = `<div class="alert" style="color: red; font-family: 'Comfortaa', sans-serif; margin-top: 10px; font-size: 20px;">${message}</div>`;
     }
+*/
+
     </script>        
 </body>
 </html>
