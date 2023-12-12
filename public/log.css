@@ -138,14 +138,14 @@ body {
       border-radius: 100px;
   }
   
-  .error-message {
+  #errMsg {
     color: red;
-    margin-top: 5px; /* Adjust the margin as needed */
-    margin-bottom: 15px; /* Adjust the margin as needed */
+    margin-top: 5px;
+    margin-bottom: 15px;
     border-radius: 50px;
     font-family: 'Comfortaa', sans-serif;
     font-size: 18px;
-  }
+}
 
 .invalid-credentials,
 .invalid-inputs {

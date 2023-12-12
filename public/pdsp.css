@@ -23,13 +23,23 @@ p {
 .item, .purchase-btn{
     font-family: 'Comfortaa', sans-serif;
 }
-#WelcomeDiv {
+#WelcomeMsg {
   font-family: 'Fredoka', sans-serif;
   font-weight: 700;
   font-size: 20px;
   text-align: center;
   margin-top: 20px; /* Adjust as needed for spacing */
   color: #8fb391;
+}
+
+#errMsg {
+  color: red;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border-radius: 50px;
+  font-family: 'Comfortaa', sans-serif;
+  font-size: 18px;
+  text-align: center;
 }
 
 /* Center align the header text */
@@ -108,6 +118,20 @@ p {
     background-color: rgb(247, 218, 170);  /* Sets a darker blue as background on hover */
     color: rgb(139, 98, 26);              /* Keeps text color white */
   }
+
+  .inputButton:focus, .inputBox:focus, .removeBtn:focus {
+    outline: none;
+}
+
+  .qtyButton {
+  background: none;
+  border: none;
+  margin: none;
+  font-size: 25px;
+  line-height: 90%;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 500;
+}
   
   .item h2 {
     margin: 0; /* Removes any default margin */
@@ -172,7 +196,7 @@ nav a:hover {
 
   /* Full-width input fields */
   input[type=text], input[type=password] {
-    width: 50%;
+    width: 20%;
     padding: 10px;
     margin: 5px 0 10px 0;
     display: inline-block;

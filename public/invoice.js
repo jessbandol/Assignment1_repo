@@ -1,16 +1,140 @@
-import { itemData } from "./products.js";
-
+//import { itemData } from "./products.js";
 // Extract quantity values from the URL and assign to the quantity array based on the item indexes in the quantityIndex of the itemData array
-const params = new URLSearchParams(window.location.search);
-let quantity = [];
+let params = (new URL(document.location)).searchParams;
 
+/*
+const products = [
+    {
+      "brand": "Puffy Pinks",
+      "price": 5.20,
+      "image": "./images/Puffy Pinks.jpeg",
+      "qty_available": 100,
+      "qty_sold": 0
+    },
+    {
+      "brand": "Sun Gold",
+      "price": 5.20,
+      "image": "./images/Sun Gold.png",
+      "qty_available": 100,
+      "qty_sold": 0
+    },
+    {
+      "brand": "Candyfloss",
+      "price": 6.10,
+      "image": "./images/Candyfloss.png",
+      "qty_available": 100,
+      "qty_sold": 0
+    },
+    {
+      "brand": "Bubbles",
+      "price": 4.15,
+      "image": "./images/Bubbles.png",
+      "qty_available": 100,
+      "qty_sold": 0
+    },
+    {
+      "brand": "Lucky Stars",
+      "price": 6.10,
+      "image": "./images/Lucky Stars.png",
+      "qty_available": 100,
+      "qty_sold": 0
+    } 
+  ];
+*/
+
+window.onload = function() {
+    if (!params.has('name') || !params.has('valid')) {
+        document.write(`
+            <body style="text-align: center; margin-top: 10%;">
+                <h2>ERROR: No valid form submission detected.</h2>
+                <h4>Return to <a href="index.html">Home</a></h4> 
+            </body>
+        `);
+    } else {
+        document.getElementById('personalizationMessage').innerHTML = `Thank you ${params.get('name')}! Fill your life with charm!`;
+    }
+}
+
+let subtotal = 0;
+//extended price
+let taxRate = 0.0575;
+let taxAmount = 0;
+let total = 0;
+let shippingCharge = 0;
+
+let qty = [];
+for (let i in products) {
+    qty.push(params.get(`qty${i}`));
+}
+
+for (let i in qty) {
+    if (qty[i] == 0 || qty[i] == '') continue;
+
+    extended_price = (params.get(`qty${i}`) * products[i].price).toFixed(2);
+    subtotal += Number(extended_price);
+
+    document.querySelector('#invoiceTable').innerHTML += `
+        <tr style="border: none;">
+            <td width="10%"><img src="${products[i].image}" style="border-radius: 5px;"></td>
+            <td>${products[i].brand}</td>
+            <td>${qty[i]}</td>
+            <td>${products[i].qty_available}</td>
+            <td>$${products[i].price.toFixed(2)}</td>
+            <td>$${extended_price}</td>
+        </tr>
+    `;
+}
+
+// Sales tax
+let tax_rate = (4.7/100);
+let tax_amt = subtotal * tax_rate;
+
+// Shipping
+if (subtotal < 300) {
+    shipping = 5;
+    shipping_display = `$${shipping.toFixed(2)}`;
+    total = Number(tax_amt + subtotal + shipping);
+}
+else if (subtotal >= 300 && subtotal < 500) {
+    shipping = 10;
+    shipping_display = `$${shipping.toFixed(2)}`;
+    total = Number(tax_amt + subtotal + shipping);
+}
+else {
+    shipping = 0;
+    shipping_display = 'FREE';
+    total = Number(tax_amt + subtotal + shipping);
+}
+
+document.querySelector('#total_display').innerHTML += `
+    <tr style="border-top: 2px solid black;">
+        <td colspan="5" style="text-align:center;">Sub-total</td>
+        <td>$${subtotal.toFixed(2)}</td>
+    </tr>
+    <tr>
+        <td colspan="5" style="text-align:center;">Tax @ ${Number(tax_rate) * 100}%</td>
+        <td>$${tax_amt.toFixed(2)}</td>
+    </tr>
+    <tr>
+        <td colspan="5" style="text-align:center;">Shipping</td>
+        <td>${shipping_display}</td>
+    </tr>
+    <tr>
+        <td colspan="5" style="text-align:center;"><b>Total</td>
+        <td><b>$${total.toFixed(2)}</td>
+    </tr>
+`;
+
+/*/
 for (let i = 0; i < itemData.length; i++) {
     let quantityValue = params.get(`quantity${i}`);
     if (quantityValue !== null) {
         quantity[itemData[i].quantityIndex] = Number(quantityValue);
     }
 }
+*/
 
+/*
 // Inventory object with initial quantities
 const inventory = {
     "puffy pinks": 100,
@@ -19,7 +143,9 @@ const inventory = {
     "bubbles": 100,
     "lucky stars": 100,
 };
+*/
 
+/*
 //extended price
 let subtotal = 0;
 let taxRate = 0.0575;
@@ -48,7 +174,9 @@ document.getElementById('total_cell').innerHTML = `$${total.toFixed(2)}`;
 document.getElementById('subtotal_cell').innerHTML = '$' + subtotal.toFixed(2);
 document.getElementById('tax_cell').innerHTML = '$' + taxAmount.toFixed(2);
 document.getElementById('shipping_cell').innerHTML = '$' + shippingCharge.toFixed(2);
+*/
 
+/*
 // Retrieve selected quantities from local storage
 const selectedQuantities = JSON.parse(localStorage.getItem('selectedQuantities'));
 
@@ -174,9 +302,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+*/
 
-
-
+/*
 // Item rows (generate the entire invoice table)
 function generateItemRows() {
     let table = document.getElementById('invoiceTable');
@@ -207,3 +335,4 @@ function generateItemRows() {
         document.getElementById('total_cell').innerHTML = '$' + total.toFixed(2);
     }
 }
+*/

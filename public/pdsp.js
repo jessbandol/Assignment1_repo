@@ -1,14 +1,14 @@
 //set up params from header, order array, and error value
 let params = (new URL(document.location)).searchParams;
-let error;
-let order = [];
+//let error;
+//let order = [];
 
 //get if there was an error before
-error = params.get('error');
+//error = params.get('error');
 //gets params from url
-let username = params.get('username');
-let totalOnline = params.get('totalOnline');
-let thankYouMessage = params.get('thankYou');
+//let username = params.get('username');
+//let totalOnline = params.get('totalOnline');
+//let thankYouMessage = params.get('thankYou');
 
 //define objects representing a product with brand, price, and image information
 const product1 = {
@@ -49,20 +49,12 @@ const product5 = {
 //POKE9 array
 const products = [product1, product2, product3, product4, product5];
 
-// sets the welcomeDiv, and adds the image and message depending on size 
-const welcomeDiv = document.getElementById('WelcomeDiv');
-// Check if the username is available before updating the content
-if (username) {
-    welcomeDiv.innerHTML += `<h3 class="text text-center">Welcome ${username}!</h3>`;
-} else {
-    welcomeDiv.innerHTML += `<h3 class="text text-center">Welcome!</h3>`;
-}
-
-
-//if there is an error submitted, then show the error text in errorDiv
-if (error == 'true') {
-    document.getElementById('errorDiv').innerHTML += `<h2 class="text-danger">Input Error - Please Fix!</h2><br>`;
-}
+//extended price
+let subtotal = 0;
+let taxRate = 0.0575;
+let taxAmount = 0;
+let total = 0;
+let shippingCharge = 0;
 
 // for loop (generates product sections with quantity input and error messages for each product in the array)
 for (let i = 0; i < products.length; i++) {
@@ -73,12 +65,18 @@ for (let i = 0; i < products.length; i++) {
         <p>Sold: <span style="text-decoration: underline; color: orange; display: inline-block; margin-bottom: 15px">${products[i].total_sold}</span></p>
         <p>$${products[i].price.toFixed(2)}</p>
         <img src="${products[i].image}"/>
-        <label id="quantity${i}_label" for="quantity${i}"> Quantity Desired </label>
-        <input type="text" name="quantity${i}" id="quantity${i}" oninput="validateQuantity(${i})">
-        <p class="error-message" id="quantity${i}_error"></p>
+        
+        <div class="quantity-selector">
+        <button type="button" class="qtyButton highlight" onclick="document.getElementById('qty${[i]}_entered').value--; checkInputTextbox(document.getElementById('qty${[i]}_entered'), ${products[i].qty_available});">-</button>
+        <input type="text" autocomplete="off" placeholder="0" name="qty${[i]}" id="qty${[i]}_entered" class="inputBox" onkeyup="checkInputTextbox(this,${products[i].qty_available})">
+        <button type="button" class="qtyButton highlight" onclick="document.getElementById('qty${[i]}_entered').value++; checkInputTextbox(document.getElementById('qty${[i]}_entered'), ${products[i].qty_available});">+</button>
+        </div>
+
+        <div id="qty${[i]}_error" style="color: red;"></div>
     </section>`;
 }
 
+/*
 //validation errors
 function validateQuantity(index) {
     const quantityInput = document.getElementById(`quantity${index}`);
@@ -99,14 +97,104 @@ function validateQuantity(index) {
         errorMessage.classList.add('valid-message');
     }
 }
+*/
 
-/*
-function submitForm() {
-    // Perform any necessary tasks before submitting the form
-    console.log("Form submitted!");
-    // Submit the form
-    document.getElementById('purchaseForm').submit();
-}*/
+window.onload = function() {
+    if (params.has('error')) {
+
+        document.getElementById('errMsg').innerHTML = "No quantities selected.";
+        setTimeout(() => {
+            document.getElementById('errMsg').innerHTML = "";
+        }, 2000);
+    }
+    else if (params.has('inputErr')) {
+        document.getElementById('errMsg').innerHTML = "Please fix errors before proceeding.";
+        setTimeout(() => {
+            document.getElementById('errMsg').innerHTML = "";
+        }, 2000);
+        
+        for (let i in products) {
+            let qtyInput = qty_form[`qty${[i]}_entered`];
+            let qtyError = document.getElementById(`qty${[i]}_error`);
+
+            //set value from url parameters
+            if (params.get(`qty${i}`) !== null) {
+                qtyInput.value = params.get(`qty${i}`);
+            }
+
+            //validate quantity & display errors 
+            let errorMessages = validateQuantity(qtyInput.value, products[i].qty_available);
+            if (errorMessages.length > 0) {
+                qtyError.innerHTML = errorMessages.join('<br>');
+                qtyInput.parentElement.style.borderColor = "red";
+            } else {
+                qtyError.innerHTML = "";
+                qtyInput.parentElement.style.borderColor = "black";
+            }
+        }
+    }
+    if (params.has('name')) {
+        document.getElementById('WelcomeMsg').innerHTML = `Thank you ${name}! You are the most charming!`;
+        for (let i in products) {
+            qty_form[`qty${i}`].value = params.get(`qty${i}`);
+        }
+    }
+}
+
+//validation errors
+function validateQuantity(quantity, availableQuantity) {
+    let errors = []; // Initialize an array to hold error messages
+
+    quantity=Number(quantity);
+
+    switch (true) {
+        case (isNaN(quantity)) && (quantity != ''):
+            errors.push("Not a number. Please enter a non-negative quantity to order.");
+            break;
+        case quantity < 0 && !Number.isInteger(quantity):
+            errors.push("Negative inventory and not an Integer. Please enter a non-negative quantity to order.");
+            break;
+        case quantity < 0:
+            errors.push("Negative inventory. Please enter a non-negative quantity to order.");
+            break;
+        case quantity !=0 && !Number.isInteger(quantity):
+            errors.push("Not an Integer. Please enter a non-negative quantity to order.");
+            break;
+        case quantity > availableQuantity:
+            errors.push(`We do not have ${quantity} available.`);
+            break;
+        
+    }
+
+    return errors; 
+};
+
+//quantity textbox check
+function checkInputTextbox(textBox, availableQuantity) {
+    let str = String(textBox.value);
+
+    // Check if the first character is '0' and remove it if found
+    if (str.charAt(0) == '0') {
+        textBox.value = Number(str.slice(0, 0) + str.slice(1, str.length));
+    }
+
+    // Convert the input value to a number
+    let inputValue = Number(textBox.value);
+
+    // Validate the user input quantity using the updated validateQuantity function
+    let errorMessages = validateQuantity(inputValue, availableQuantity);
+
+    // Check if there are any error messages and update the display
+    let errorDisplay = document.getElementById(textBox.name + '_error');
+    if (errorMessages.length > 0) {
+        errorDisplay.innerHTML = errorMessages.join('<br>');
+        errorDisplay.style.color = "red";
+        textBox.parentElement.style.borderColor = "red";
+    } else {
+        errorDisplay.innerHTML = "";
+        textBox.parentElement.style.borderColor = "black";
+    }
+}
 
 /*
 // for loop (generates product sections with quantity input and error messages for each product in the array)

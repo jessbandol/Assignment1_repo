@@ -23,8 +23,8 @@
           <p>Please fill in this form to create an account.</p>
       
             <!-- Display username error message -->
-            <div id="usernameError" style="color: red; font-family: 'Comfortaa', sans-serif; margin-top: 10px; font-size: 16px;"></div>
-            <input type="text" placeholder="Enter Username" name="username" id="username" required>
+            <div id="nameError" style="color: red; font-family: 'Comfortaa', sans-serif; margin-top: 10px; font-size: 16px;"></div>
+            <input type="text" placeholder="Enter Name" name="name" id="name" required>
 
             <!-- Display email error message -->
             <div id="emailError" style="color: red; font-family: 'Comfortaa', sans-serif; margin-top: 10px; font-size: 16px;"></div>
@@ -65,7 +65,7 @@
 
         //gets the params from url
         let email = params.get('email');
-        let username = params.get('username');
+        let username = params.get('name');
 
         //makes values sticky
         if(email !== null){
@@ -73,7 +73,7 @@
         }
 
         if(username !== null){
-            document.getElementById('username').value = username;
+            document.getElementById('name').value = name;
         }
 
         // Set the value of the hidden input field to the JSON representation of the order array
